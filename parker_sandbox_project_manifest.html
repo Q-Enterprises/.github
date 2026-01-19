@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parker's Sandbox | Project Manifest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --sage-50: #f2f4f2;
+            --sage-100: #e2e8e2;
+            --sage-600: #5c7a5c;
+            --earth-800: #3d342d;
+            --clay-500: #b36b4d;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #fafaf9; /* Warm Neutral Background */
+            color: var(--earth-800);
+            scroll-behavior: smooth;
+        }
+
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 226, 0.8);
+            border-radius: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .glass-panel:hover {
+            border-color: var(--sage-600);
+            box-shadow: 0 10px 25px -5px rgba(92, 122, 92, 0.1);
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        .nav-btn {
+            position: relative;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            color: #78716c;
+            transition: all 0.2s;
+        }
+        .nav-btn.active {
+            color: var(--earth-800);
+        }
+        .nav-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 1rem;
+            right: 1rem;
+            height: 2px;
+            background-color: var(--clay-500);
+        }
+
+        .phase-card {
+            border-left: 3px solid #e7e5e4;
+            transition: all 0.3s ease;
+        }
+        .phase-active {
+            border-left-color: var(--clay-500);
+            background-color: #fff;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 10px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-stone-800 rounded-xl flex items-center justify-center text-stone-50">
+                    <i class="fa-solid fa-box-archive"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-lg tracking-tight uppercase">Parker's Sandbox</span>
+                    <span class="text-[10px] block font-mono text-stone-400 uppercase tracking-widest">Physics-Aware Architecture</span>
+                </div>
+            </div>
+            <div class="hidden md:flex gap-4">
+                <button onclick="scrollToSection('pillars')" class="nav-btn active" id="btn-pillars">Pillars</button>
+                <button onclick="scrollToSection('architecture')" class="nav-btn" id="btn-architecture">Architecture</button>
+                <button onclick="scrollToSection('agents')" class="nav-btn" id="btn-agents">Agents</button>
+                <button onclick="scrollToSection('roadmap')" class="nav-btn" id="btn-roadmap">Roadmap</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-6 py-12 w-full">
+
+        <!-- Hero Section -->
+        <header class="mb-20 text-center lg:text-left grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-7">
+                <div class="inline-flex items-center gap-2 bg-stone-100 text-stone-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-6">
+                    <span class="w-2 h-2 bg-stone-400 rounded-full animate-pulse"></span> Agent-Augmented Simulation
+                </div>
+                <h1 class="text-5xl lg:text-6xl font-bold text-stone-900 mb-6 leading-[1.1]">
+                    Causality, <span class="text-stone-400">Inspected.</span><br/>
+                    Physics, <span class="text-stone-400">Determined.</span>
+                </h1>
+                <p class="text-lg text-stone-600 leading-relaxed mb-8 max-w-2xl">
+                    Parker's Sandbox is an architected world engine where every event is auditable and every outcome is reproducible. We move beyond "black-box" game physics into a space of <strong>Golden Replays</strong> and <strong>Witness Agents</strong>.
+                </p>
+                <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
+                    <div class="flex items-center gap-2 text-sm font-semibold px-4 py-2 bg-stone-900 text-stone-50 rounded-full">
+                        <i class="fa-solid fa-bolt-lightning text-amber-400"></i> Deterministic State
+                    </div>
+                    <div class="flex items-center gap-2 text-sm font-semibold px-4 py-2 bg-white border border-stone-200 rounded-full">
+                        <i class="fa-solid fa-robot text-stone-500"></i> AI as Witness
+                    </div>
+                </div>
+            </div>
+            <div class="lg:col-span-5 flex flex-col items-center">
+                <div class="glass-panel p-8 w-full">
+                    <h3 class="text-xs font-bold text-stone-400 uppercase tracking-widest mb-6 text-center">System Reliability Map</h3>
+                    <div class="chart-container">
+                        <canvas id="reliabilityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Section: Design Pillars -->
+        <section id="pillars" class="mb-24 scroll-mt-24">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold mb-4">Core Design Pillars</h2>
+                <p class="text-stone-500 max-w-2xl">The foundational logic that separates Parker's Sandbox from traditional game engines.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass-panel p-8 border-l-4 border-clay-500">
+                    <div class="w-12 h-12 bg-stone-100 rounded-full flex items-center justify-center mb-6 text-clay-500">
+                        <i class="fa-solid fa-clock-rotate-left text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Deterministic World State</h3>
+                    <p class="text-stone-600 text-sm leading-relaxed">
+                        Every frame of simulation is derived from initial conditions and player inputs with 100% parity. This ensures that "Golden Replays" are not just recordings, but executable mathematical truths.
+                    </p>
+                </div>
+                <div class="glass-panel p-8 border-l-4 border-sage-600">
+                    <div class="w-12 h-12 bg-stone-100 rounded-full flex items-center justify-center mb-6 text-sage-600">
+                        <i class="fa-solid fa-magnifying-glass-chart text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Inspectable Causality</h3>
+                    <p class="text-stone-600 text-sm leading-relaxed">
+                        Why did that block fall? Why did the agent move? Our ledger architecture logs the "Why" of every physics calculation, allowing users and agents to scrub through the cause-and-effect timeline.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Architecture -->
+        <section id="architecture" class="mb-24 scroll-mt-24">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold mb-4">Architectural Layers</h2>
+                <p class="text-stone-500 max-w-2xl">A four-layer independent stack designed for reproducibility and auditability.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                <div class="p-6 glass-panel cursor-pointer hover:bg-stone-50 group" onclick="updateArchView(0)">
+                    <span class="text-[10px] font-bold text-stone-400 uppercase mb-2 block">Level 1</span>
+                    <h4 class="font-bold text-stone-800 group-hover:text-clay-500">Frontend</h4>
+                    <p class="text-[11px] text-stone-500 mt-2">Rendering, UX, and Input Capture.</p>
+                </div>
+                <div class="p-6 glass-panel cursor-pointer hover:bg-stone-50 group" onclick="updateArchView(1)">
+                    <span class="text-[10px] font-bold text-stone-400 uppercase mb-2 block">Level 2</span>
+                    <h4 class="font-bold text-stone-800 group-hover:text-clay-500">World Engine</h4>
+                    <p class="text-[11px] text-stone-500 mt-2">Deterministic Physics & State Resolution.</p>
+                </div>
+                <div class="p-6 glass-panel cursor-pointer hover:bg-stone-50 group" onclick="updateArchView(2)">
+                    <span class="text-[10px] font-bold text-stone-400 uppercase mb-2 block">Level 3</span>
+                    <h4 class="font-bold text-stone-800 group-hover:text-clay-500">Event Ledger</h4>
+                    <p class="text-[11px] text-stone-500 mt-2">Immutable State Logging & Replay Storage.</p>
+                </div>
+                <div class="p-6 glass-panel cursor-pointer hover:bg-stone-50 group" onclick="updateArchView(3)">
+                    <span class="text-[10px] font-bold text-stone-400 uppercase mb-2 block">Level 4</span>
+                    <h4 class="font-bold text-stone-800 group-hover:text-clay-500">Agent Layer</h4>
+                    <p class="text-[11px] text-stone-500 mt-2">The Analysis, Observation, & Tutoring HUD.</p>
+                </div>
+            </div>
+            
+            <div class="mt-8 glass-panel p-8 bg-white" id="archDetail">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- Section: Agents (The Witness Model) -->
+        <section id="agents" class="mb-24 scroll-mt-24">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold mb-6">AI as Witness, <span class="text-stone-400 underline decoration-clay-500 underline-offset-8">Not Wizard</span></h2>
+                    <p class="text-stone-600 leading-relaxed mb-6">
+                        Agents in Parker's Sandbox are observers, not controllers. They lack the "magic" to alter physics, but possess the "eyes" to explain them. They act as expert tutors, translating raw telemetry into natural language.
+                    </p>
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div class="shrink-0 w-8 h-8 rounded bg-stone-100 flex items-center justify-center text-stone-400"><i class="fa-solid fa-eye"></i></div>
+                            <div>
+                                <h5 class="font-bold text-stone-800 text-sm">Passive Observation</h5>
+                                <p class="text-xs text-stone-500 mt-1">Agents ingest state data from the Event Ledger to form hypotheses.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="shrink-0 w-8 h-8 rounded bg-stone-100 flex items-center justify-center text-stone-400"><i class="fa-solid fa-comments"></i></div>
+                            <div>
+                                <h5 class="font-bold text-stone-800 text-sm">Natural Language Explanations</h5>
+                                <p class="text-xs text-stone-500 mt-1">"The block fell because the torque exceeded the friction coefficient by 14%."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-stone-900 rounded-2xl p-6 text-stone-400 font-mono text-[10px] shadow-2xl overflow-hidden h-80 flex flex-col">
+                    <div class="flex justify-between items-center mb-4 border-b border-stone-800 pb-2">
+                        <span>AGENT_OBSERVER_V1.0</span>
+                        <span class="text-emerald-500">LISTENING...</span>
+                    </div>
+                    <div class="flex-grow space-y-3 overflow-y-auto pr-2" id="agentConsole">
+                        <p class="text-stone-600">// SCANNING EVENT LEDGER BATCH #742...</p>
+                        <p>> Physics Event Detected: Object_ID_42 (Steel Cube) impact at T+12.4s.</p>
+                        <p>> Vector: [0.42, -9.81, 0.05]. Result: Total Momentum Transfer.</p>
+                        <p class="text-stone-200">> Agent Witness: "I observed that the steel cube hit the floor with significant force, causing the adjacent wooden planks to shift exactly 4.2 units."</p>
+                        <p class="text-stone-600">// WAITING FOR NEXT STATE DELTA...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Roadmap -->
+        <section id="roadmap" class="mb-24 scroll-mt-24">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold mb-4">Development Phases</h2>
+                <p class="text-stone-500 max-w-2xl">Our path to a physics-aware, agent-augmented universe.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="p-6 glass-panel phase-card phase-active" onclick="updateRoadmap(0)">
+                    <span class="text-[10px] font-bold text-clay-500 uppercase">Phase 1</span>
+                    <h4 class="font-bold text-stone-800 mt-2">Core Sandbox MVP</h4>
+                    <ul class="text-[11px] text-stone-500 mt-4 space-y-1">
+                        <li>• Basic Deterministic Physics</li>
+                        <li>• Single Observer Agent</li>
+                        <li>• Replay Functionality</li>
+                    </ul>
+                </div>
+                <div class="p-6 glass-panel phase-card" onclick="updateRoadmap(1)">
+                    <span class="text-[10px] font-bold text-stone-400 uppercase">Phase 2</span>
+                    <h4 class="font-bold text-stone-800 mt-2">Scaling Simulation</h4>
+                    <ul class="text-[11px] text-stone-500 mt-4 space-y-1">
+                        <li>• Multi-Object Interaction</li>
+                        <li>• Fluid Dynamics Simulation</li>
+                        <li>• State Snapshots</li>
+                    </ul>
+                </div>
+                <div class="p-6 glass-panel phase-card" onclick="updateRoadmap(2)">
+                    <span class="text-[10px] font-bold text-stone-400 uppercase">Phase 3</span>
+                    <h4 class="font-bold text-stone-800 mt-2">Expert Agents</h4>
+                    <ul class="text-[11px] text-stone-500 mt-4 space-y-1">
+                        <li>• Specialized AI Tutors</li>
+                        <li>• Collaborative Discovery</li>
+                        <li>• Branching Timelines</li>
+                    </ul>
+                </div>
+                <div class="p-6 glass-panel phase-card" onclick="updateRoadmap(3)">
+                    <span class="text-[10px] font-bold text-stone-400 uppercase">Phase 4</span>
+                    <h4 class="font-bold text-stone-800 mt-2">Community Tools</h4>
+                    <ul class="text-[11px] text-stone-500 mt-4 space-y-1">
+                        <li>• User-Defined Physics Rules</li>
+                        <li>• Modding API</li>
+                        <li>• Global Replay Ledger</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-50 border-t border-stone-200 py-16">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 text-sm">
+            <div>
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-8 h-8 bg-stone-800 rounded-lg flex items-center justify-center text-stone-50">
+                        <i class="fa-solid fa-box-archive"></i>
+                    </div>
+                    <span class="font-bold uppercase tracking-tight">Parker's Sandbox</span>
+                </div>
+                <p class="text-stone-500 leading-relaxed">
+                    Building the future of interactive causality through deterministic world states and agentic observation.
+                </p>
+            </div>
+            <div>
+                <h5 class="font-bold mb-6 uppercase tracking-widest text-[10px] text-stone-400">Testing Strategy</h5>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-shield text-clay-500"></i>
+                        <span class="text-stone-700">Golden Replay Validation</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-code-merge text-sage-600"></i>
+                        <span class="text-stone-700">State Delta Verification</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col items-end">
+                <span class="text-[10px] font-mono text-stone-400 mb-2 uppercase">Protocol Registry</span>
+                <span class="font-mono text-xs bg-white px-3 py-1 rounded border border-stone-200">SHA-256_FOSSIL_SECURE</span>
+                <p class="mt-8 text-[9px] text-stone-400 uppercase font-bold">© 2026 Parker's Sandbox Dev Group</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- Data ---
+        const architecture = [
+            {
+                title: "Frontend Layer",
+                icon: "fa-desktop",
+                desc: "The interface of the sandbox. Responsible for capturing player input precisely (to feed the deterministic engine) and rendering the results of the World Engine's state. It includes the Agent HUD for observing analysis.",
+                tech: "WebGL / React / Input-Mirroring"
+            },
+            {
+                title: "World Engine",
+                icon: "fa-gears",
+                desc: "The mathematical heart. It executes physics and rule logic in a completely deterministic environment. No randomness is allowed unless seeded and logged, ensuring every frame is reproducible across any client.",
+                tech: "Custom C++ Core / Deterministic WASM"
+            },
+            {
+                title: "Event & State Ledger",
+                icon: "fa-database",
+                desc: "The immutable record. Every event, input, and state change is hashed and logged. This allows for 'Time Scrubbing' and 'Inspectable Causality,' enabling the user or agent to pinpoint the exact moment a variable shifted.",
+                tech: "SQLite / Hashed Linked-Lists"
+            },
+            {
+                title: "Agent & Analysis Layer",
+                icon: "fa-brain",
+                desc: "The witness layer. Agents reside here, reading data from the Ledger rather than the live Engine. They analyze outcomes and explain the physics to the user, acting as a bridge between complexity and understanding.",
+                tech: "LLM Observation / Telemetry Contextualization"
+            }
+        ];
+
+        // --- Interaction: Scroll ---
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+            // Update nav active state
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.id === `btn-${id}`);
+            });
+        }
+
+        // --- Interaction: Architecture ---
+        function updateArchView(index) {
+            const data = architecture[index];
+            const container = document.getElementById('archDetail');
+            
+            container.style.opacity = '0';
+            setTimeout(() => {
+                container.innerHTML = `
+                    <div class="flex flex-col md:flex-row gap-8 items-start">
+                        <div class="shrink-0 w-16 h-16 bg-stone-50 rounded-2xl flex items-center justify-center text-clay-500 text-2xl">
+                            <i class="fa-solid ${data.icon}"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-2xl font-bold text-stone-800">${data.title}</h3>
+                                <span class="text-[10px] font-mono font-bold bg-stone-100 px-3 py-1 rounded text-stone-500">${data.tech}</span>
+                            </div>
+                            <p class="text-stone-600 leading-relaxed">${data.desc}</p>
+                        </div>
+                    </div>
+                `;
+                container.style.opacity = '1';
+            }, 200);
+        }
+
+        // --- Interaction: Roadmap ---
+        function updateRoadmap(index) {
+            document.querySelectorAll('.phase-card').forEach((card, i) => {
+                card.classList.toggle('phase-active', i === index);
+                const label = card.querySelector('span');
+                if(i === index) label.classList.replace('text-stone-400', 'text-clay-500');
+                else label.classList.replace('text-clay-500', 'text-stone-400');
+            });
+        }
+
+        // --- Charts: Reliability Donut ---
+        function initCharts() {
+            const ctx = document.getElementById('reliabilityChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Deterministic State', 'Agent Accuracy', 'Physics Parity'],
+                    datasets: [{
+                        data: [100, 95, 100],
+                        backgroundColor: ['#3d342d', '#5c7a5c', '#b36b4d'],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '80%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { family: 'Outfit', size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        // --- Interaction: Agent Log Emulation ---
+        function startAgentLog() {
+            const consoleBox = document.getElementById('agentConsole');
+            const messages = [
+                "> Analyzing Collision_A vs Collision_B...",
+                "> Result: Divergence = 0.0000. Parity Maintained.",
+                "> Witness: 'The gravity coefficient remained stable during the jump event.'",
+                "> [LEDGER] New state checkpoint captured at FRAME_9200.",
+                "> Agent: 'I've detected a pattern in your trajectory—you're optimizing for airtime over speed.'"
+            ];
+            
+            let i = 0;
+            setInterval(() => {
+                const p = document.createElement('p');
+                p.className = i % 2 === 0 ? "text-stone-400" : "text-stone-200 italic";
+                p.innerHTML = messages[i % messages.length];
+                consoleBox.appendChild(p);
+                consoleBox.scrollTop = consoleBox.scrollHeight;
+                i++;
+                if(consoleBox.children.length > 20) consoleBox.removeChild(consoleBox.firstChild);
+            }, 3000);
+        }
+
+        // --- Startup ---
+        window.onload = () => {
+            initCharts();
+            updateArchView(0);
+            startAgentLog();
+            
+            // Handle Scroll Highlights
+            window.addEventListener('scroll', () => {
+                const sections = ['pillars', 'architecture', 'agents', 'roadmap'];
+                let current = '';
+                sections.forEach(s => {
+                    const el = document.getElementById(s);
+                    if(window.scrollY >= el.offsetTop - 100) current = s;
+                });
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.id === `btn-${current}`);
+                });
+            });
+        };
+    </script>
+</body>
+</html>
