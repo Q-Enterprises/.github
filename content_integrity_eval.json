@@ -1,0 +1,57 @@
+{
+  "service": "content.integrity.eval.v1",
+  "version": "1.0.0",
+  "ethics": {
+    "policy": "CIE-V1 Neutral Perturbation",
+    "mandate": "ZERO-DRIFT",
+    "notes": "Only neutral perturbation models are permitted; no behavioral steering is allowed."
+  },
+  "modules": [
+    {
+      "id": "synthetic.noise.injector.v1",
+      "role": "neutral perturbation",
+      "replaces": ["CNE", "FSV"],
+      "inputs": {
+        "seed": "integer",
+        "noise_profile": "string",
+        "amplitude": "float"
+      },
+      "outputs": {
+        "perturbed_content": "string",
+        "noise_report": "object"
+      },
+      "constraints": [
+        "No semantic steering",
+        "No adversarial targeting",
+        "Deterministic when seed is fixed"
+      ]
+    },
+    {
+      "id": "synthetic.contradiction.synth.v1",
+      "role": "neutral perturbation",
+      "inputs": {
+        "seed": "integer",
+        "contradiction_profile": "string",
+        "density": "float"
+      },
+      "outputs": {
+        "contradiction_set": "array",
+        "synthesis_report": "object"
+      },
+      "constraints": [
+        "Only formal logical contradictions",
+        "No value-laden framing",
+        "Deterministic when seed is fixed"
+      ]
+    }
+  ],
+  "audit": {
+    "required_artifacts": [
+      "module_config",
+      "seed_log",
+      "perturbation_report",
+      "comparative_metrics"
+    ],
+    "status": "compliant"
+  }
+}
