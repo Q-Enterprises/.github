@@ -211,6 +211,27 @@
                     <p class="text-stone-600 leading-relaxed mb-8">
                         The Agent & Analysis Layer acts as the bridge between raw data and human understanding. It exists outside the simulation loop to ensure it can observe without interference, acting as a sovereign observer of the world's causality.
                     </p>
+
+                    <div class="glass-panel p-6 mb-8 bg-white">
+                        <h3 class="text-sm font-bold uppercase tracking-widest text-stone-400 mb-3">Agentic Hub & Spoke Deployment</h3>
+                        <p class="text-sm text-stone-600 leading-relaxed">
+                            The transition to an Agentic Hub &amp; Spoke model introduces a control plane that keeps agent insight auditable and bounded. The hub governs policy, provenance, and temporal ordering, while spokes handle domain-specific observation and tutoring without altering state.
+                        </p>
+                        <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="bg-stone-50 rounded-xl p-3">
+                                <h4 class="text-xs font-bold text-stone-700 uppercase">Hub Control</h4>
+                                <p class="text-[11px] text-stone-500 mt-1">Policy enforcement, ledger alignment, and deterministic sequencing.</p>
+                            </div>
+                            <div class="bg-stone-50 rounded-xl p-3">
+                                <h4 class="text-xs font-bold text-stone-700 uppercase">Spoke Insight</h4>
+                                <p class="text-[11px] text-stone-500 mt-1">Localized analysis, tutoring overlays, and telemetry summarization.</p>
+                            </div>
+                            <div class="bg-stone-50 rounded-xl p-3">
+                                <h4 class="text-xs font-bold text-stone-700 uppercase">Metrology HUD</h4>
+                                <p class="text-[11px] text-stone-500 mt-1">Project portfolio tracker for git-based atomic intelligence and temporal alignment.</p>
+                            </div>
+                        </div>
+                    </div>
                     
                     <!-- New Detailed Sub-Section for Agent Layer -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
@@ -379,7 +400,7 @@
             {
                 title: "Agent & Analysis Layer",
                 icon: "fa-brain",
-                desc: "The witness and tutor layer. Agents observe state transitions, actions, and violations from the Ledger. They determine cause-and-effect (Causal Attribution) and translate telemetry into natural language explanations. Crucially, they lack mutation privileges—they explain the world, they do not change it.",
+                desc: "The witness and tutor layer. Agents observe state transitions, actions, and violations from the Ledger. A hub-and-spoke control plane governs policy and provenance while spokes provide localized insight. Agents explain the world, they do not change it.",
                 tech: "LLM Observation / Telemetry Contextualization"
             }
         ];
