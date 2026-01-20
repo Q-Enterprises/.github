@@ -1,0 +1,32 @@
+name: Ledger bundle verification
+
+on:
+  workflow_dispatch:
+    inputs:
+      bundle_root:
+        description: "Path to a replay bundle root containing bundle.manifest.json"
+        required: false
+        default: "."
+  pull_request:
+
+jobs:
+  verify-ledger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Verify ledger bundle (if present)
+        env:
+          BUNDLE_ROOT: ${{ inputs.bundle_root || '.' }}
+        run: |
+          if [ -f "${BUNDLE_ROOT}/bundle.manifest.json" ]; then
+            node scripts/verify-ledger-bundle.mjs "${BUNDLE_ROOT}"
+          else
+            echo "No bundle.manifest.json found at ${BUNDLE_ROOT}; skipping verification."
+          fi
