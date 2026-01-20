@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Web Pet Kernel</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: #121212;
+        color: #e6e6e6;
+        display: flex;
+        height: 100vh;
+      }
+      .panel {
+        flex: 1;
+        padding: 16px;
+        box-sizing: border-box;
+      }
+      #game-canvas {
+        border: 1px solid #333;
+        display: block;
+        background: #222;
+      }
+      .terminal {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+      #terminal-log {
+        flex: 1;
+        background: #0f0f0f;
+        border: 1px solid #2a2a2a;
+        padding: 8px;
+        overflow-y: auto;
+        font-family: "SFMono-Regular", Menlo, monospace;
+        font-size: 12px;
+        line-height: 1.4;
+      }
+      #terminal-input {
+        margin-top: 8px;
+        padding: 10px;
+        background: #1b1b1b;
+        border: 1px solid #2a2a2a;
+        color: #e6e6e6;
+      }
+      .hint {
+        margin-top: 10px;
+        font-size: 12px;
+        color: #9a9a9a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="panel">
+      <canvas id="game-canvas" width="640" height="360"></canvas>
+      <div class="hint">Click the pet to feed. Use keys p, c, r to play, clean, rest.</div>
+    </div>
+    <div class="panel terminal">
+      <div id="terminal-log"></div>
+      <input
+        id="terminal-input"
+        type="text"
+        placeholder="Type a command (feed, rest, clean, play, export_chapter)"
+        autocomplete="off"
+      />
+    </div>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
