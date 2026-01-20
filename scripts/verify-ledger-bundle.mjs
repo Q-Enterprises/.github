@@ -60,6 +60,16 @@ function validateReceiptEnvelope(receipt) {
   if (receipt.protocol !== PROTOCOL) {
     throw new Error(`Unknown protocol: ${receipt.protocol}`);
   }
+  if (!receipt.timestamp_iso) {
+    throw new Error("Missing timestamp_iso.");
+  }
+  if (Number.isNaN(Date.parse(receipt.timestamp_iso))) {
+    throw new Error("Invalid timestamp_iso.");
+  }
+  if (!receipt.arc_id) throw new Error("Missing arc_id.");
+  if (!receipt.parent_hash) throw new Error("Missing parent_hash.");
+  if (!receipt.event_type) throw new Error("Missing event_type.");
+  if (!("data" in receipt)) throw new Error("Missing data field.");
   if (!receipt.event_id) throw new Error("Missing event_id.");
   if (typeof receipt.frame !== "number" || receipt.frame < 0) {
     throw new Error("Invalid frame.");
@@ -111,11 +121,14 @@ function computeReceiptHash(receipt) {
   return `sha256:${sha256Hex(canonical)}`;
 }
 
-async function verifyReceipts(receipts) {
+async function verifyReceipts(receipts, manifestArcId) {
   const seenIds = new Set();
   let parentHash = GENESIS_PARENT_HASH;
   for (const receipt of receipts) {
     validateReceiptEnvelope(receipt);
+    if (manifestArcId && receipt.arc_id !== manifestArcId) {
+      throw new Error(`Receipt arc_id mismatch: ${receipt.arc_id}`);
+    }
     if (seenIds.has(receipt.event_id)) {
       throw new Error(`Duplicate event_id: ${receipt.event_id}`);
     }
@@ -154,10 +167,8 @@ function computeReceiptParentHashByFrame(receipts) {
   const map = new Map();
   let parentHash = GENESIS_PARENT_HASH;
   for (const receipt of receipts) {
-    if (!map.has(receipt.frame)) {
-      map.set(receipt.frame, parentHash);
-    }
     parentHash = computeReceiptHash(receipt);
+    map.set(receipt.frame, parentHash);
   }
   return map;
 }
@@ -194,6 +205,10 @@ async function validateManifest(manifest, root) {
 
   for (const { entry } of filesToVerify) {
     if (!entry?.path) throw new Error("Manifest entry missing path.");
+    if (!entry?.sha256) throw new Error("Manifest entry missing sha256.");
+    if (typeof entry?.bytes !== "number") {
+      throw new Error("Manifest entry missing bytes.");
+    }
     const filePath = resolve(root, entry.path);
     const stats = await stat(filePath);
     const { hash, bytes } = await sha256File(filePath);
@@ -219,7 +234,7 @@ async function main() {
 
   const receiptsPath = resolve(root, manifest.files.receipts.path);
   const receipts = await readReceipts(receiptsPath);
-  await verifyReceipts(receipts);
+  await verifyReceipts(receipts, manifest.arc_id);
 
   const receiptParentHashByFrame = computeReceiptParentHashByFrame(receipts);
   if (Array.isArray(manifest.files.checkpoints)) {
