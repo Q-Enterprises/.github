@@ -27,3 +27,8 @@ jobs:
         run: pnpm --filter @world-os/kernel test
       - name: Test contracts
         run: pnpm --filter @world-os/contracts test
+      - name: Golden capsule corridor law
+        if: ${{ env.GOLDEN_CAPSULE_BUNDLE != '' }}
+        env:
+          GOLDEN_CAPSULE_BUNDLE: ${{ env.GOLDEN_CAPSULE_BUNDLE }}
+        run: node scripts/golden-capsule-test.mjs
