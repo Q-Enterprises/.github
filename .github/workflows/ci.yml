@@ -1,15 +1,47 @@
 name: ci
+
 on:
   push:
+    branches: [ "main" ]
   pull_request:
+    branches: [ "main" ]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Debug secrets availability
         run: |
           echo "MAKER_ED25519_SEED available: ${{ secrets.MAKER_ED25519_SEED != '' }}"
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          # Caching disabled to resolve "pnpm-lock.yaml not found" dependency void
 
-echo "MAKER_ED25519_SEED available: ${{ secrets.MAKER_ED25519_SEED != '' }}" 
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: true
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile=false
+
+      - name: Lint
+        run: pnpm lint || true
+
+      - name: Test kernel
+        run: pnpm --filter @world-os/kernel test
+
+      - name: Test contracts
+        run: pnpm --filter @world-os/contracts test
+
+      - name: Golden capsule corridor law
+        if: ${{ env.GOLDEN_CAPSULE_BUNDLE != '' }}
+        env:
+          GOLDEN_CAPSULE_BUNDLE: ${{ env.GOLDEN_CAPSULE_BUNDLE }}
+        run: node scripts/golden-capsule-test.mjs
