@@ -1,39 +1,13 @@
-name: ci
+- name: Test contracts
+      run: pnpm --filter @world-os/contracts test
 
-on:
-  push:
-  pull_request:
+    - name: Golden capsule corridor law
+      if: ${{ env.GOLDEN_CAPSULE_BUNDLE != '' }}
+      env:
+        GOLDEN_CAPSULE_BUNDLE: ${{ env.GOLDEN_CAPSULE_BUNDLE }}
+      run: node scripts/golden-capsule-test.mjs
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Debug secrets availability
-        run: |
-          echo "MAKER_ED25519_SEED available: ${{ secrets.MAKER_ED25519_SEED != '' }}"
-      - uses: pnpm/action-setup@v4
-        with:
-          run_install: true
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "pnpm"
-      - name: Install
-        run: pnpm install --frozen-lockfile=false
-      - name: Lint
-        run: pnpm lint || true
-      - name: Test kernel
-        run: pnpm --filter @world-os/kernel test
-      - name: Test contracts
-        run: pnpm --filter @world-os/contracts test
-      - name: Golden capsule corridor law
-        if: ${{ env.GOLDEN_CAPSULE_BUNDLE != '' }}
-        env:
-          GOLDEN_CAPSULE_BUNDLE: ${{ env.GOLDEN_CAPSULE_BUNDLE }}
-        run: node scripts/golden-capsule-test.mjs
-
-        - uses: pnpm/action-setup@v4
-        with:
-          version: 9  # Add this line
-          run_install: true
+    - uses: pnpm/action-setup@v4
+      with:
+        version: 9
+        run_install: true
