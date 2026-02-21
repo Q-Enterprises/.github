@@ -1,12 +1,10 @@
 name: ci
-
 on:
   push:
-  pull_request:
-
-jobs:
+  pull_request:  # Unindented to align with 'push'
+jobs:            # Unindented to be a top-level key
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest:
     steps:
       - uses: actions/checkout@v4
       - name: Debug secrets availability
