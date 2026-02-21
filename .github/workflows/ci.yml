@@ -10,3 +10,6 @@ jobs:
       - name: Debug secrets availability
         run: |
           echo "MAKER_ED25519_SEED available: ${{ secrets.MAKER_ED25519_SEED != '' }}"
+
+
+echo "MAKER_ED25519_SEED available: ${{ secrets.MAKER_ED25519_SEED != '' }}" 
