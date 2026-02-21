@@ -1,12 +1,13 @@
 name: ci
 on:
   push:
-  pull_request:  # Unindented to align with 'push'
-jobs:            # Unindented to be a top-level key
+  pull_request:
+jobs:
   build:
-    runs-on: ubuntu-latest:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # Add your additional steps here (e.g., setup-node, install, test)
       - name: Debug secrets availability
         run: |
           echo "MAKER_ED25519_SEED available: ${{ secrets.MAKER_ED25519_SEED != '' }}"
